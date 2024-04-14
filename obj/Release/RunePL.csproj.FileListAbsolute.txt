@@ -1,0 +1,7 @@
+C:\Users\Andrea\source\repos\RunePL\RunePL\bin\Release\RunePL.exe.config
+C:\Users\Andrea\source\repos\RunePL\RunePL\bin\Release\RunePL.exe
+C:\Users\Andrea\source\repos\RunePL\RunePL\bin\Release\RunePL.pdb
+C:\Users\Andrea\source\repos\RunePL\RunePL\obj\Release\RunePL.csproj.AssemblyReference.cache
+C:\Users\Andrea\source\repos\RunePL\RunePL\obj\Release\RunePL.csproj.CoreCompileInputs.cache
+C:\Users\Andrea\source\repos\RunePL\RunePL\obj\Release\RunePL.exe
+C:\Users\Andrea\source\repos\RunePL\RunePL\obj\Release\RunePL.pdb
