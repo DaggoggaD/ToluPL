@@ -36,6 +36,11 @@ namespace ToluPL
                 Token token = new Token(Values.T_KW, str);
                 return token;
             }
+            else if (str == "True" || str == "False")
+            {
+                Token token = new Token(Values.T_BOOL, str);
+                return token;
+            }
             else if (Int32.TryParse(str, out couldint))
             {
                 Token token = new Token(Values.T_INT, "NUMBER", couldint);
@@ -60,6 +65,7 @@ namespace ToluPL
             string currstr = "";
             while (index < line.Length)
             {
+                if (currstr == " ") currstr = "";
                 string currchar = line[index].ToString();
                 string nextchar;
                 if (index + 1 < line.Length) nextchar = line[index + 1].ToString();
@@ -68,14 +74,14 @@ namespace ToluPL
                 //Operators checker
                 if (Values.OperationsList.Contains(currstr) && currstr[0].ToString() != "\"" && currstr!=" ")
                 {
-                    //One-char operators
+                    //Multi-char operators
                     if (Values.OperationsList.Contains(currstr+nextchar))
                     {
                         Token token = new Token(Values.T_OP, Values.Operators[currstr+nextchar]);
                         if (currstr != " ") tokens.Add(token);
                         index++;
                     }
-                    else //multiple chars operators
+                    else //One char operators
                     {
                         Token token = new Token(Values.T_OP, Values.Operators[currstr]);
                         if (currstr != " ") tokens.Add(token);
@@ -94,6 +100,7 @@ namespace ToluPL
                 //Operator skip
                 else if (Values.OperationsList.Contains(nextchar) && currstr[0].ToString() != "\"")
                 {
+                    //Checks if str becomes a float number, by checking other numbers after a "."
                     if(Int32.TryParse(currstr, out int temp) && nextchar.ToString()==".")
                     {
                         index++;
@@ -110,6 +117,7 @@ namespace ToluPL
                         tokens.Add(token);
                         currstr = "";
                     }
+                    //Adds the token if an operator is positioned after currstr without a space
                     else
                     {
                         Token token = Find_token(currstr);
@@ -118,6 +126,7 @@ namespace ToluPL
                         currstr = "";
                     }
                 }
+                //checks for strings
                 else if (currstr[0].ToString()=="\"" && currchar.ToString() == "\"" && currstr.Length!=1)
                 {
                     Token token = new Token(Values.T_STRING,currstr);

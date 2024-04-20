@@ -1,3 +1,15 @@
-int a = (3 +3) - 2 * 3;
-float b = 2.3+2;
-string thatsastringwow = "aaaaa";
+bool CHECK = True;
+bool notCHECK = False;
+
+if(Check==True){
+	int c = 3 + 2;
+}
+
+while(notCHECK==False){
+	int d = 3;
+}
+
+fn int FUNCTION(int a; int b;){
+	int inside = 2;
+	float v = 2.0;
+}

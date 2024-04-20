@@ -9,7 +9,9 @@ namespace ToluPL
     static class Values
     {
         public static Token T_Error = new Token("ERROR", "ERROR");
+        public static Token Empty = new Token("NONE", "NONE");
         public static Node N_Error = new Node(T_Error);
+        public static Statement STEmpty = new Statement();
 
         //String tokens
         public static string T_PLUS = "PLUS";
@@ -77,7 +79,8 @@ namespace ToluPL
 
         public static List<string> KeywordsList = new List<string>()
         {
-            "if","else","while","for","function","out","append","remove","find","return","int","float","list","string","bool"
+             //          //            //                                           //    //      //     //       //
+            "if","else","while","for","fn","out","append","remove","find","return","int","float","list","string","bool"
         };
 
         //Operations array
