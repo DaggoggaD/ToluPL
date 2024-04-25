@@ -1,5 +1,12 @@
-int a = 3;
-int b = 2;
-int c = 4 > a;
-string d = "this is a string";
-float e = 3.2 ** 2;
+int i = 1;
+float res = 4.0;
+while(i<10000){
+	if(i%2==0){
+		change res = res + 4/(2*i+1);
+	}
+	if(i%2!=0){
+		change res = res - 4/(2*i+1);
+	}
+	change i = i + 1;
+}
+out(res;);

@@ -21,6 +21,7 @@ namespace ToluPL
         public const string T_MULT = "MULTIPLY";
         public const string T_DIV = "DIV";
         public const string T_POW = "POW";
+        public const string T_MOD = "MOD";
         public const string T_LPAR = "LPAR";
         public const string T_RPAR = "RPAR";
         public const string T_COMMA = "COMMA";
@@ -58,6 +59,7 @@ namespace ToluPL
             {"*", T_MULT },
             {"/", T_DIV },
             {"**", T_POW },
+            {"%", T_MOD },
             {"(", T_LPAR },
             {")", T_RPAR },
             {",", T_COMMA },
@@ -81,14 +83,15 @@ namespace ToluPL
 
         public static List<string> KeywordsList = new List<string>()
         {
-             //          //            //                                           //    //      //     //       //
-            "if","else","while","for","fn","out","append","remove","find","return","int","float","list","string","bool"
+             //          //            //   //                                      //    //      //     //       //     //   
+            "if","else","while","for","fn","out","append","remove","find","return","int","float","list","string","bool","change"
+             //          //                 //                                      //    //      //     //       //     //
         };
 
         //Operations array
         public static List<string> OperationsList = new List<string>()
         { 
-            "+", "-", "*", "/", "**", "(", ")", ",", ";", ":", "=", "<", ">", "==", "!=", ">=", "<=", ".", "[", "]", "{", "}", "!","\""
+            "%","+", "-", "*", "/", "**", "(", ")", ",", ";", ":", "=", "<", ">", "==", "!=", ">=", "<=", ".", "[", "]", "{", "}", "!","\""
         };
     }
 }

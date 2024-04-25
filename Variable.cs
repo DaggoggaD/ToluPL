@@ -10,15 +10,21 @@ namespace ToluPL
     {
         public string VTYPE { get; set; }
         public string VNAME { get; set; }
-        public Node VALUE { get; set; }
+        public dynamic VALUE { get; set; }
         public Statement AssignedVal;
+        private List<Variable> CV;
+        private List<Function> CF;
+
 
         public Variable(string OVTYPE, string OVNAME, Statement OASSIGNEDVAL, Interpreter interpreter, List<Variable> GlobVar, List<Function> GlobFN)
         {
             VTYPE = OVTYPE;
             VNAME = OVNAME;
             AssignedVal = OASSIGNEDVAL;
-            VALUE = interpreter.Expr(AssignedVal, GlobVar, GlobFN);
+            CV = new List<Variable>(GlobVar);
+            CF = new List<Function>(GlobFN);
+
+            VALUE = interpreter.Expr(AssignedVal, CV, CF);
         }
 
         public string REPR()

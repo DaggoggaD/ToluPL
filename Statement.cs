@@ -136,4 +136,36 @@ namespace ToluPL
             return "(Function: " + "[" + returnTok.TValue +  "] " + " [" + fnName.TValue + "] " + " [" + args + "]" + " ->" + reprstr;
         }
     }
+
+    class OutStatement : Statement
+    {
+        public Statement printable;
+
+        public OutStatement(Statement PRINTABLE)
+        {
+            printable = PRINTABLE;
+        }
+
+        public override string REPR()
+        {
+            return "Out(" + printable.REPR() + ")";
+        }
+    }
+
+    class ChangeValStatement : Statement
+    {
+        public Token Name;
+        public Statement Value;
+
+        public ChangeValStatement(Token NAME, Statement VALUE)
+        {
+            Name = NAME;
+            Value = VALUE;
+        }
+
+        public override string REPR()
+        {
+            return "Assign: " + Value.REPR() + " -> " + "(" + Name.TType +" : " + Name.TValue +")" + ")";
+        }
+    }
 }

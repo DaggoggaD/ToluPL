@@ -54,6 +54,9 @@ namespace ToluPL
                 case Values.T_POW:
                     RET = new Token(LeftNode.token.TType, (float)Math.Pow((double)LeftNode.token.TValue, (double)RightNode.token.TValue));
                     break;
+                case Values.T_MOD:
+                    RET = new Token(LeftNode.token.TType, LeftNode.token.TValue % RightNode.token.TValue);
+                    break;
                 case Values.T_LESS:
                     RET = new Token(Values.T_BOOL, (LeftNode.token.TValue < RightNode.token.TValue));
                     break;
@@ -121,7 +124,6 @@ namespace ToluPL
             switch (statement.GetType().Name)
             {
                 case nameof(Node):
-
                     return NodeAnalisis((Node)statement,GV,GF);
 
                 case nameof(AssignStatement):
@@ -135,6 +137,27 @@ namespace ToluPL
                     Node result = new Node(resTok);
                     return result;
 
+                case nameof(OutStatement):
+                    OutStatement ost = (OutStatement)statement;
+                    OutI OutF = new OutI(ost.printable,this,GV,GF);
+                    return OutF;
+
+                case nameof(IfStatement):
+                    IfStatement ifStatement = (IfStatement)statement;
+                    IfI ifInterp = new IfI(ifStatement.checkexpr,ifStatement.ifexpr, this,GV,GF);
+                    return ifInterp;
+
+                case nameof(WhileStatement):
+                    WhileStatement whileStatement = (WhileStatement)statement;
+                    WhileI whileInterp = new WhileI(whileStatement.checkexpr,whileStatement.insidexpr,this,GV,GF);
+                    return whileInterp;
+
+                case nameof(ChangeValStatement):
+                    ChangeValStatement Assign = (ChangeValStatement)statement;
+                    ChangeValI AI = new ChangeValI(Assign.Name,Assign.Value,this,GV,GF);
+                    return AI;
+
+
                 default:
                     return Values.STEmpty;
             }
@@ -142,15 +165,21 @@ namespace ToluPL
 
         public void Cycle()
         {
+            if(!Program.SHUT) Console.Write("----START OF PROGRAM----\n\n");
             while (currstatement!=Values.STEnd)
             {
                 dynamic result = Expr(currstatement,GlobalVariables,GlobalFunctions);
                 Advance();
-                if(nameof(Variable)!= result.GetType().Name) Console.WriteLine(result.REPR());
             }
-            foreach (Variable var in GlobalVariables)
+            if (!Program.SHUT)
             {
-                Console.WriteLine(var.REPR());
+                Console.Write("\n----END OF PROGRAM----\n");
+                Console.WriteLine("\n--Global variables debug--\n");
+                foreach (Variable var in GlobalVariables)
+                {
+                    Console.WriteLine(var.REPR());
+                }
+                Console.WriteLine();
             }
         }
     }

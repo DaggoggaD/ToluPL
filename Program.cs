@@ -10,7 +10,8 @@ namespace ToluPL
     internal class Program
     {
         public static List<Token> toks;
-        public static bool SHUT = false;
+        public static bool SHUT = true;
+
 
         public static List<string> OpenFile(string filepath)
         {
@@ -47,6 +48,7 @@ namespace ToluPL
 
         static void Main(string[] args)
         {
+            var watch = new System.Diagnostics.Stopwatch();
             //Instructions
             Console.WriteLine("Specify script path.");
             Console.WriteLine("Write RUN followed by script path.");
@@ -54,9 +56,10 @@ namespace ToluPL
             Console.Write("Shell> ");
 
             //Read file lines
+            
             string Filename = Console.ReadLine();
             List<string> retVal = OpenFile(Filename);
-
+            watch.Start();
             //Lexer init and calc
             Lexer lexer = new Lexer(retVal);
             toks = lexer.tokens;
@@ -67,8 +70,9 @@ namespace ToluPL
 
             //Compiler
             Interpreter interpreter = new Interpreter(statements);
-
+            watch.Stop();
             INFO(retVal, statements);
+            Console.WriteLine($"\n[Execution Time: {watch.ElapsedMilliseconds} ms]");
         }
     }
 }

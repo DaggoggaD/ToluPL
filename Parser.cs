@@ -32,7 +32,8 @@ namespace ToluPL
         {
             Token tok = currtoken;
             List<string> COND = new List<string>() { Values.T_INT, Values.T_FLOAT, Values.T_ID, Values.T_STRING, Values.T_LIST, Values.T_BOOL};
-            if (COND.Contains(tok.TType)) {
+            if (COND.Contains(tok.TType))
+            {
                 Advance();
                 Node node = new Node(tok);
                 return node;
@@ -59,7 +60,7 @@ namespace ToluPL
         public Statement Term()
         {
             Statement left = Factor();
-            List<string> COND = new List<string>() {Values.T_MULT, Values.T_DIV, Values.T_POW};
+            List<string> COND = new List<string>() {Values.T_MULT, Values.T_DIV, Values.T_POW, Values.T_MOD};
             while (COND.Contains(currtoken.TValue))
             {
                 Token OPtoken = currtoken;
@@ -152,8 +153,40 @@ namespace ToluPL
             return retStat;
         }
 
-        public Statement Expr() {
+        public Statement OutPrint()
+        {
+            Advance();
+            if (currtoken.TValue != Values.T_LPAR) return Values.N_Error;
+            Advance();
+            Statement Args = Expr();
+            Advance();
+            if (currtoken.TValue!=Values.T_RPAR) return Values.N_Error;
+            Advance() ;
+            Statement retStat = new OutStatement(Args);
+            return retStat;
+        }
 
+        public Statement AssignValue(Token AssignedName)
+        {
+            Advance();
+            Statement expr = Expr();
+            Statement AV = new ChangeValStatement(AssignedName, expr);
+            return AV;
+        }
+
+        public Statement ChangeExpr()
+        {
+            Advance();
+            Token Name = currtoken;
+            Advance();
+            if (currtoken.TValue != Values.T_EQUAL) return Values.STEmpty;
+            Advance();
+            Statement Assigned = Expr();
+            ChangeValStatement res = new ChangeValStatement(Name, Assigned);
+            return res;
+        }
+
+        public Statement Expr() {
             switch (currtoken.TValue)
             {
                 case "int":
@@ -172,8 +205,12 @@ namespace ToluPL
                     return CheckRunStatements("while");
                 case "fn":
                     return Funcdecl();
+                case "out":
+                    return OutPrint();
+                case "change":
+                    return ChangeExpr();
                 default:
-                    List<string> COND = new List<string>() { Values.T_PLUS, Values.T_MINUS, Values.T_MULT, Values.T_DIV, Values.T_LESS, Values.T_GREATER, Values.T_LS_EQUAL, Values.T_EQUALS, Values.T_GR_EQUAL, Values.T_EQUAL, Values.T_NOT_EQUALS };
+                    List<string> COND = new List<string>() { Values.T_PLUS, Values.T_MINUS, Values.T_MULT, Values.T_MOD, Values.T_DIV, Values.T_LESS, Values.T_GREATER, Values.T_LS_EQUAL, Values.T_EQUALS, Values.T_GR_EQUAL, Values.T_EQUAL, Values.T_NOT_EQUALS };
                     Statement left = Term();
                     while (COND.Contains(currtoken.TValue))
                     {
