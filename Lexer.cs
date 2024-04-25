@@ -36,19 +36,22 @@ namespace ToluPL
                 Token token = new Token(Values.T_KW, str);
                 return token;
             }
-            else if (str == "True" || str == "False")
+            else if (str == "true" || str == "false")
             {
-                Token token = new Token(Values.T_BOOL, str);
+                Token token;
+                if (str=="true") token = new Token(Values.T_BOOL, true);
+                else token = new Token(Values.T_BOOL, false);
+
                 return token;
             }
             else if (Int32.TryParse(str, out couldint))
             {
-                Token token = new Token(Values.T_INT, "NUMBER", couldint);
+                Token token = new Token(Values.T_INT, couldint);
                 return token;
             }
             else if (float.TryParse(str, out couldfloat))
             {
-                Token token = new Token(Values.T_FLOAT, "NUMBER", couldfloat);
+                Token token = new Token(Values.T_FLOAT, couldfloat);
                 return token;
             }
             else
@@ -113,7 +116,7 @@ namespace ToluPL
                         }
                         float res = 0;
                         float.TryParse(currstr, out res);
-                        Token token = new Token(Values.T_FLOAT, "NUMBER", res);
+                        Token token = new Token(Values.T_FLOAT, res);
                         tokens.Add(token);
                         currstr = "";
                     }
@@ -129,7 +132,7 @@ namespace ToluPL
                 //checks for strings
                 else if (currstr[0].ToString()=="\"" && currchar.ToString() == "\"" && currstr.Length!=1)
                 {
-                    Token token = new Token(Values.T_STRING,currstr);
+                    Token token = new Token(Values.T_STRING,currstr.Trim('"'));
                     if (currstr != " ") tokens.Add(token);
                     index++;
                     currstr = "";

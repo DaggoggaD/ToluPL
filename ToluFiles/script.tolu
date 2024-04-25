@@ -1,15 +1,5 @@
-bool CHECK = True;
-bool notCHECK = False;
-
-if(Check==True){
-	int c = 3 + 2;
-}
-
-while(notCHECK==False){
-	int d = 3;
-}
-
-fn int FUNCTION(int a; int b;){
-	int inside = 2;
-	float v = 2.0;
-}
+int a = 3;
+int b = 2;
+int c = 4 > a;
+string d = "this is a string";
+float e = 3.2 ** 2;

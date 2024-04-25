@@ -6,16 +6,14 @@ using System.Threading.Tasks;
 
 namespace ToluPL
 {
-    internal class Token
+    public class Token
     {
         public string TType;
-        public string TValue;
-        public float? TValueNum;
+        public dynamic TValue;
         
-        public Token(string ttype, string tvalue, float? tvaluenum = null) {
+        public Token(string ttype, dynamic tvalue) {
             TType = ttype;
             TValue = tvalue;
-            TValueNum = tvaluenum;
         }
 
         public bool Equals(Token other)
@@ -38,8 +36,7 @@ namespace ToluPL
 
         public void REPR()
         {
-            if (TValue!="NUMBER") Console.WriteLine(TType + ": " + TValue);
-            else Console.WriteLine(TType + ": " + TValueNum);
+            Console.WriteLine(TType + ": " + TValue);
         }
     }
 }

@@ -1,5 +1,4 @@
-﻿using RunePL;
-using System;
+﻿using System;
 using System.Collections.Generic;
 using System.IO;
 using System.Linq;
@@ -67,7 +66,7 @@ namespace ToluPL
             List<Statement> statements = parser.statements;
 
             //Compiler
-            Compiler compiler = new Compiler(statements);
+            Interpreter interpreter = new Interpreter(statements);
 
             INFO(retVal, statements);
         }

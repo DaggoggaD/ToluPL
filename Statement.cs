@@ -7,8 +7,11 @@ using System.Threading.Tasks;
 
 namespace ToluPL
 {
-    class Statement
+    public class Statement
     {
+
+        public Statement() { }
+
         public virtual string REPR() {
             return "";
         }
@@ -24,14 +27,13 @@ namespace ToluPL
 
         public override string REPR()
         {
-            if (token.TValue != "NUMBER") return "(" + token.TType + " : " + token.TValue + ")";
-            else return "(" + token.TType + " : " + token.TValueNum + ")";
+            return "(" + token.TType + " : " + token.TValue + ")";
         }
     }
 
     class BinaryOP : Statement
     {
-        public Statement left;
+        public Statement left { get; set; }
         public Token opTOKEN;
         public Statement right;
 
