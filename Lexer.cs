@@ -30,8 +30,8 @@ namespace ToluPL
         
         private Token Find_token(string str) 
         {
-            int couldint = 0;
-            float couldfloat = 0;
+            long couldint = 0;
+            double couldfloat = 0;
             if (Values.KeywordsList.Contains(str)) {
                 Token token = new Token(Values.T_KW, str);
                 return token;
@@ -44,14 +44,14 @@ namespace ToluPL
 
                 return token;
             }
-            else if (Int32.TryParse(str, out couldint))
+            else if (long.TryParse(str, out couldint))
             {
-                Token token = new Token(Values.T_INT, couldint);
+                Token token = new Token(Values.T_LONG, couldint);
                 return token;
             }
-            else if (float.TryParse(str, out couldfloat))
+            else if (double.TryParse(str, out couldfloat))
             {
-                Token token = new Token(Values.T_FLOAT, couldfloat);
+                Token token = new Token(Values.T_DOUBLE, couldfloat);
                 return token;
             }
             else
@@ -114,9 +114,9 @@ namespace ToluPL
                             currstr += line[index];
                             index++;
                         }
-                        float res = 0;
-                        float.TryParse(currstr, out res);
-                        Token token = new Token(Values.T_FLOAT, res);
+                        double res = 0;
+                        double.TryParse(currstr, out res);
+                        Token token = new Token(Values.T_DOUBLE, res);
                         tokens.Add(token);
                         currstr = "";
                     }

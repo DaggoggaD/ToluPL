@@ -129,11 +129,44 @@ namespace ToluPL
             string args = "";
 
             arguments.ForEach(ie => args += ie.REPR() + ", ");
-            args = args.Substring(0, args.Length - 2);
+            try
+            {
+                args = args.Substring(0, args.Length - 2);
+            }
+            catch (Exception e){ args = "No Args"; }
 
             insidexpr.ForEach(ie => reprstr += ie.REPR() + ", ");
-            reprstr = reprstr.Substring(0, reprstr.Length - 2);
+            try
+            {
+                reprstr = reprstr.Substring(0, reprstr.Length - 2);
+            }
+            catch{ reprstr = "No Expr"; }
             return "(Function: " + "[" + returnTok.TValue +  "] " + " [" + fnName.TValue + "] " + " [" + args + "]" + " ->" + reprstr;
+        }
+    }
+
+    class FnCallStatement : Statement
+    {
+        public Token fnName;
+        public List<Statement> arguments;
+
+        public FnCallStatement(Token FNNAME, List<Statement> ARGUMENTS)
+        {
+            fnName = FNNAME;
+            arguments = ARGUMENTS;
+        }
+
+        public override string REPR()
+        {
+            string args = "";
+            arguments.ForEach(ie => args += ie.REPR() + ", ");
+            try
+            {
+                args = args.Substring(0, args.Length - 2);
+            }
+            catch (Exception e) { args = "No Args"; }
+            
+            return $"(Function Call: {fnName}, Args:[{args}])";
         }
     }
 

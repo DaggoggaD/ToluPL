@@ -156,7 +156,17 @@ namespace ToluPL
                     ChangeValStatement Assign = (ChangeValStatement)statement;
                     ChangeValI AI = new ChangeValI(Assign.Name,Assign.Value,this,GV,GF);
                     return AI;
+                case nameof(FnStatement):
+                    FnStatement fnStatement = (FnStatement)statement;
+                    Function fn = new Function(fnStatement.fnName,fnStatement.returnTok, fnStatement.arguments,fnStatement.insidexpr, this, GV,GF);
+                    GF.Add(fn);
+                    return fn;
 
+                case nameof(FnCallStatement):
+                    FnCallStatement fnCallst = (FnCallStatement)statement;
+                    FnCallI FnCall = new FnCallI(fnCallst.fnName,fnCallst.arguments,this,GV,GF);
+
+                    return FnCall;
 
                 default:
                     return Values.STEmpty;
@@ -178,6 +188,11 @@ namespace ToluPL
                 foreach (Variable var in GlobalVariables)
                 {
                     Console.WriteLine(var.REPR());
+                }
+                Console.WriteLine("\n--Global functions debug--\n");
+                foreach (Function fn in GlobalFunctions)
+                {
+                    Console.WriteLine(fn.REPR());
                 }
                 Console.WriteLine();
             }

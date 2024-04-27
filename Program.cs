@@ -10,7 +10,7 @@ namespace ToluPL
     internal class Program
     {
         public static List<Token> toks;
-        public static bool SHUT = true;
+        public static bool SHUT = false;
 
 
         public static List<string> OpenFile(string filepath)
@@ -68,7 +68,7 @@ namespace ToluPL
             Parser parser = new Parser(toks);
             List<Statement> statements = parser.statements;
 
-            //Compiler
+            //Interpreter
             Interpreter interpreter = new Interpreter(statements);
             watch.Stop();
             INFO(retVal, statements);

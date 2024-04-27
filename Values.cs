@@ -44,6 +44,8 @@ namespace ToluPL
 
         public const string T_INT = "INT";
         public const string T_FLOAT = "FLOAT";
+        public const string T_DOUBLE = "DOUBLE";
+        public const string T_LONG = "LONG";
         public const string T_STRING = "STRING";
         public const string T_LIST = "LIST";
         public const string T_BOOL = "BOOL";
@@ -83,9 +85,9 @@ namespace ToluPL
 
         public static List<string> KeywordsList = new List<string>()
         {
-             //          //            //   //                                      //    //      //     //       //     //   
-            "if","else","while","for","fn","out","append","remove","find","return","int","float","list","string","bool","change"
-             //          //                 //                                      //    //      //     //       //     //
+             //          //            //   //                                      //    //      //        //     //       //      //
+            "if","else","while","for","fn","out","append","remove","find","return","int","float", "double","list","string","bool", "long"
+             //          //                 //                                      //    //      //        //     //       //      //
         };
 
         //Operations array

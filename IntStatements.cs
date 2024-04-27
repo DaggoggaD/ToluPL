@@ -127,4 +127,68 @@ namespace ToluPL
             return "Change " + VNAME + " -> " + VALUE.REPR();
         }
     }
+
+    internal class FnCallI : IntStatements
+    {
+        public string VNAME;
+        public List<Statement> ARGS;
+        private List<Variable> CV;
+        private List<Function> CF;
+
+        public FnCallI(Token tok, List<Statement> CARGS, Interpreter interpreter, List<Variable> GlobVar, List<Function> GlobFN)
+        {
+            VNAME = tok.TValue;
+            ARGS = CARGS;
+
+            //Finds the function between global (or upwards) sections of code
+            Function SelectedFN = findFunc(GlobFN);
+            CV = SelectedFN.CV;
+            CF = SelectedFN.CF;
+
+            List<Node> InV = new List<Node>();
+            foreach (Statement stat in ARGS)
+            {
+                InV.Add(interpreter.Expr(stat, GlobVar, GlobFN));
+            }
+
+            int argsCount = ARGS.Count;
+            int CVLEN = CV.Count;
+
+            //assigns arguments to placeholder variables
+            for(int index = -argsCount; index < 0; index++)
+            {
+                CV[CVLEN + index].VALUE = InV[argsCount + index];
+            }
+
+            dynamic result = RunFunc(SelectedFN,interpreter, CV,CF);
+        }
+
+        public Function findFunc(List<Function> GlobF)
+        {
+            foreach (Function Fn in GlobF)
+            {
+                if (Fn.Name.TValue == VNAME)
+                {
+                    return Fn;
+                }
+            }
+            Console.WriteLine("Function name not yet defined");
+            return null;
+        }
+
+        public dynamic RunFunc(Function FN, Interpreter interpreter, List<Variable> GlobVar, List<Function> GlobFN)
+        {
+            dynamic RES = null;
+            foreach (Statement stat in FN.Insidexpr)
+            {
+                RES = interpreter.Expr(stat, GlobVar, GlobFN);
+            }
+            return RES;
+        }
+
+        public string REPR()
+        {
+            return "Function run ";
+        }
+    }
 }

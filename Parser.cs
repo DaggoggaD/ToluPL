@@ -11,6 +11,7 @@ namespace ToluPL
     {
         public List<Token> tokens;
         public Token currtoken;
+        public Token nextoken;
         public int tokID = -1;
         public List<Statement> statements;
 
@@ -26,12 +27,16 @@ namespace ToluPL
             if (tokID < tokens.Count) {
                 currtoken = tokens[tokID];
             }
+            if(tokID+1 < tokens.Count)
+            {
+                nextoken = tokens[tokID+1];
+            }
         }
 
         public Statement Factor()
         {
             Token tok = currtoken;
-            List<string> COND = new List<string>() { Values.T_INT, Values.T_FLOAT, Values.T_ID, Values.T_STRING, Values.T_LIST, Values.T_BOOL};
+            List<string> COND = new List<string>() { Values.T_INT, Values.T_LONG, Values.T_FLOAT, Values.T_DOUBLE, Values.T_ID, Values.T_STRING, Values.T_LIST, Values.T_BOOL};
             if (COND.Contains(tok.TType))
             {
                 Advance();
@@ -176,7 +181,6 @@ namespace ToluPL
 
         public Statement ChangeExpr()
         {
-            Advance();
             Token Name = currtoken;
             Advance();
             if (currtoken.TValue != Values.T_EQUAL) return Values.STEmpty;
@@ -186,6 +190,59 @@ namespace ToluPL
             return res;
         }
 
+        public Statement CreateBOP()
+        {
+            List<string> COND = new List<string>() { Values.T_PLUS, Values.T_MINUS, Values.T_MULT, Values.T_MOD, Values.T_DIV, Values.T_LESS, Values.T_GREATER, Values.T_LS_EQUAL, Values.T_EQUALS, Values.T_GR_EQUAL, Values.T_EQUAL, Values.T_NOT_EQUALS };
+            Statement left = Term();
+            while (COND.Contains(currtoken.TValue))
+            {
+
+                Token OP = currtoken;
+                Advance();
+                Statement right = Term();
+                BinaryOP BOP = new BinaryOP(left, OP, right);
+                left = BOP;
+            }
+            return left;
+        }
+
+        public Statement FnCallExpr()
+        {
+            Token Name = currtoken;
+            Advance();
+            if(currtoken.TValue!=Values.T_LPAR) return Values.STEmpty;
+            Advance();
+            List<Statement> Args = new List<Statement>();
+            while (Convert.ToString(currtoken.TValue) != Values.T_RPAR)
+            {
+                Statement retstatemnt = Expr();
+                Advance();
+                Args.Add(retstatemnt);
+            }
+            if (currtoken.TValue != Values.T_RPAR) return Values.STEmpty;
+
+            Advance();
+            FnCallStatement fncall = new FnCallStatement(Name, Args);
+            return fncall;
+        }
+
+        public Statement HandleDefault()
+        {
+            if (currtoken.TType == Values.T_ID)
+            {
+                switch (nextoken.TValue)
+                {
+                    case Values.T_EQUAL:
+                        return ChangeExpr();
+                    case Values.T_LPAR:
+                        return FnCallExpr();
+                    default:
+                        return CreateBOP();
+                }
+            }
+            return CreateBOP();            
+        }
+
         public Statement Expr() {
             switch (currtoken.TValue)
             {
@@ -193,6 +250,10 @@ namespace ToluPL
                     return AssignFunc("int");
                 case "float":
                     return AssignFunc("float");
+                case "double":
+                    return AssignFunc("double");
+                case "long":
+                    return AssignFunc("long");
                 case "string":
                     return AssignFunc("string");
                 case "list":
@@ -207,21 +268,8 @@ namespace ToluPL
                     return Funcdecl();
                 case "out":
                     return OutPrint();
-                case "change":
-                    return ChangeExpr();
                 default:
-                    List<string> COND = new List<string>() { Values.T_PLUS, Values.T_MINUS, Values.T_MULT, Values.T_MOD, Values.T_DIV, Values.T_LESS, Values.T_GREATER, Values.T_LS_EQUAL, Values.T_EQUALS, Values.T_GR_EQUAL, Values.T_EQUAL, Values.T_NOT_EQUALS };
-                    Statement left = Term();
-                    while (COND.Contains(currtoken.TValue))
-                    {
-
-                        Token OP = currtoken;
-                        Advance();
-                        Statement right = Term();
-                        BinaryOP BOP = new BinaryOP(left, OP, right);
-                        left = BOP;
-                    }
-                    return left;
+                    return HandleDefault();
             }
         }
 

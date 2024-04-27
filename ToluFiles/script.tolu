@@ -1,12 +1,35 @@
-int i = 1;
-float res = 4.0;
-while(i<10000){
-	if(i%2==0){
-		change res = res + 4/(2*i+1);
+fn int pi(){
+	int i = 1;
+	long res = 4.0;
+	while(i<10000){
+		if(i%2==0){
+			res = res + 4/(2*i+1);
+		}
+		if(i%2!=0){
+			res = res - 4/(2*i+1);
+		}
+		i = i + 1;
+		out(res;);
+		out("\n";);
 	}
-	if(i%2!=0){
-		change res = res - 4/(2*i+1);
-	}
-	change i = i + 1;
+	
 }
-out(res;);
+
+fn long fib(){
+	int n = 90;
+	long num1 = 0;
+	long num2 = 1;
+	long next_num = num2;
+	int count = 1;
+
+	while(count<=n){
+		out(next_num;);
+		out("\n";);
+		count = count + 1;
+		num1 = num2;
+		num2 = next_num;
+		next_num = num1 + num2;
+	}
+}
+
+pi();
