@@ -5,7 +5,7 @@
 <h1>Tolu Programming Language</h1>
 <p>Tolu is an experimental language written in c#.</p>
 
-<h4> <span> · </span> <a href="https://github.com/DaggoggaD/ToluPL/blob/master/README.md"> Documentation </a> <span> · </span> <a href="https://github.com/DaggoggaD/ToluPL/issues"> Report Bug </a> <span> · </span> <a href="https://github.com/DaggoggaD/ToluPL/issues"> Request Feature </a> </h4>
+<h4> <span> · </span> <a href="https://github.com/DaggoggaD/ToluPL/blob/main/Docs/DOCS.md"> Documentation </a> <span> · </span> <a href="https://github.com/DaggoggaD/ToluPL/issues"> Report Bug </a> <span> · </span> <a href="https://github.com/DaggoggaD/ToluPL/issues"> Request Feature </a> </h4>
 
 
 </div>
