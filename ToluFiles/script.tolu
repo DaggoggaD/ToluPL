@@ -1,7 +1,7 @@
-fn int pi(){
+fn int pi(int len;){
 	int i = 1;
 	long res = 4.0;
-	while(i<10000){
+	while(i<len){
 		if(i%2==0){
 			res = res + 4/(2*i+1);
 		}
@@ -15,8 +15,7 @@ fn int pi(){
 	
 }
 
-fn long fib(){
-	int n = 90;
+fn long fib(int n;){
 	long num1 = 0;
 	long num2 = 1;
 	long next_num = num2;
@@ -32,4 +31,16 @@ fn long fib(){
 	}
 }
 
-pi();
+fn int ArrTest(){
+	list arr = [1,2,3;];
+	int a = arr[0;];
+	int b = arr[1;];
+	int c = arr[2;];
+	out(a+"\n";);
+	out(b+"\n";);
+	out(c+"\n";);
+}
+
+pi(500;);
+fib(35;);
+ArrTest();

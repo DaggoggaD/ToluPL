@@ -10,7 +10,7 @@ namespace ToluPL
     {
         public string VTYPE { get; set; }
         public string VNAME { get; set; }
-        public Node VALUE { get; set; }
+        public dynamic VALUE { get; set; }
         public Statement AssignedVal;
         private List<Variable> CV;
         private List<Function> CF;

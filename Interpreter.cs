@@ -115,6 +115,18 @@ namespace ToluPL
             else if(tok.TType == Values.T_KW) { return statement; }
             else
             {
+                if(tok.TType == Values.T_LIST)
+                {
+                    List<Statement> listStat = new List<Statement>();
+                    foreach (Statement stat in tok.TValue)
+                    {
+                        Node res = Expr(stat, GV, GF);
+                        listStat.Add(res);
+                    }
+                    tok.TValue = listStat;
+                    statement.token = tok;
+                    return statement;
+                }
                 return statement;
             }
         }
@@ -167,6 +179,12 @@ namespace ToluPL
                     FnCallI FnCall = new FnCallI(fnCallst.fnName,fnCallst.arguments,this,GV,GF);
 
                     return FnCall;
+
+                case nameof(AccListStatement):
+                    AccListStatement accList = (AccListStatement)statement;
+                    AccListI AccListI = new AccListI(accList.Name, accList.Indexes, this, GV,GF);
+
+                    return AccListI.VALUE;
 
                 default:
                     return Values.STEmpty;

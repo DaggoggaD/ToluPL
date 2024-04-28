@@ -181,7 +181,7 @@ namespace ToluPL
 
         public override string REPR()
         {
-            return "Out(" + printable.REPR() + ")";
+            return "(Out(" + printable.REPR() + "))";
         }
     }
 
@@ -198,7 +198,48 @@ namespace ToluPL
 
         public override string REPR()
         {
-            return "Assign: " + Value.REPR() + " -> " + "(" + Name.TType +" : " + Name.TValue +")" + ")";
+            return "(Assign: " + Value.REPR() + " -> " + "(" + Name.TType +" : " + Name.TValue +")" + ")";
+        }
+    }
+
+    class ChangeValStatementArr : Statement
+    {
+        public AccListStatement ArrAccName;
+        public Statement AssignedVal;
+
+        public ChangeValStatementArr(AccListStatement ARRNAME, Statement VALUE)
+        {
+            ArrAccName = ARRNAME;
+            AssignedVal = VALUE;
+        }
+
+        public override string REPR()
+        {
+            string indexes = "";
+            ArrAccName.Indexes.ForEach(x=> indexes += x.REPR());
+            
+            return "(Assign: " + "(" + AssignedVal.REPR() + ")" + " -> " + ArrAccName.Name.TValue + "[" + indexes + "]" + ")";
+        }
+    }
+
+    class AccListStatement : Statement
+    {
+        public Token Name;
+        public List<Statement> Indexes;
+
+        public AccListStatement(Token NAME, List<Statement>INDEXES)
+        {
+            Name = NAME;
+            Indexes = INDEXES;
+
+        }
+
+        public override string REPR()
+        {
+            string res = "";
+            Indexes.ForEach(s=> res += ", " + s.REPR());
+            res = res.Remove(0,2);
+            return $"(Access list: {Name}[{res}])";
         }
     }
 }

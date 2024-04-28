@@ -29,7 +29,22 @@ namespace ToluPL
             {
                 Node NRES = (Node) RES;
                 Token tok = NRES.token;
-                ToPrint += Convert.ToString(tok.TValue);
+                if (tok.TType!=Values.T_LIST) ToPrint += Convert.ToString(tok.TValue);
+                else
+                {
+                    List<Statement> arr = tok.TValue;
+                    string currRepr = "";
+                    currRepr += "[";
+                    foreach (Statement s in arr)
+                    {
+                        Node x = (Node)s;
+                        currRepr += ", " + x.token.TValue;
+                    }
+                    currRepr += "]";
+                    currRepr = currRepr.Remove(1,2);
+                    ToPrint+= currRepr;
+                }
+                
             }
             Console.Write(ToPrint.Replace("\\n",Environment.NewLine));
         }
@@ -191,4 +206,52 @@ namespace ToluPL
             return "Function run ";
         }
     }
+
+    internal class AccListI : IntStatements
+    {
+        public Token VNAME;
+        public List<Statement> Indexes;
+        public Statement VALUE;
+
+
+        public AccListI(Token tok, List<Statement> INDEXES, Interpreter interpreter, List<Variable> GlobVar, List<Function> GlobFN)
+        {
+            VNAME = tok;
+            Indexes = INDEXES;
+            List<Node> Expressed_indexes = new List<Node>();
+            Indexes.ForEach(x => Expressed_indexes.Add(interpreter.Expr(x, GlobVar, GlobFN)));
+
+            Variable FoundArr = null;
+            foreach (Variable Var in GlobVar)
+            {
+                if (Var.VNAME == VNAME.TValue)
+                {
+                    FoundArr = Var;
+                    break;
+                }
+            }
+
+            Token val = FoundArr.VALUE.token;
+
+            List<Statement> ARRITEMS = val.TValue;
+            int curr_index = (int)Expressed_indexes[0].token.TValue;
+            Statement res = ARRITEMS[curr_index];
+
+            for (int i = 1; i < Expressed_indexes.Count; i++)
+            {
+                curr_index = (int)Expressed_indexes[0].token.TValue;
+                res = val.TValue[curr_index];
+            }
+            VALUE = res;
+        }
+
+        public string REPR()
+        {
+            string res = "";
+            Indexes.ForEach(x => res += ", " + x.REPR());
+            res = res.Remove(0, 2);
+            return "Access list at index: [" + res + "]" + " -> " + VALUE.REPR();
+        }
+    }
+
 }

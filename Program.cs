@@ -59,7 +59,6 @@ namespace ToluPL
             
             string Filename = Console.ReadLine();
             List<string> retVal = OpenFile(Filename);
-            watch.Start();
             //Lexer init and calc
             Lexer lexer = new Lexer(retVal);
             toks = lexer.tokens;
@@ -69,6 +68,7 @@ namespace ToluPL
             List<Statement> statements = parser.statements;
 
             //Interpreter
+            watch.Start();
             Interpreter interpreter = new Interpreter(statements);
             watch.Stop();
             INFO(retVal, statements);

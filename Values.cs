@@ -87,7 +87,7 @@ namespace ToluPL
         {
              //          //            //   //                                      //    //      //        //     //       //      //
             "if","else","while","for","fn","out","append","remove","find","return","int","float", "double","list","string","bool", "long"
-             //          //                 //                                      //    //      //        //     //       //      //
+             //          //            //   //                                      //    //      //        //     //       //      //
         };
 
         //Operations array

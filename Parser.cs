@@ -39,9 +39,15 @@ namespace ToluPL
             List<string> COND = new List<string>() { Values.T_INT, Values.T_LONG, Values.T_FLOAT, Values.T_DOUBLE, Values.T_ID, Values.T_STRING, Values.T_LIST, Values.T_BOOL};
             if (COND.Contains(tok.TType))
             {
+                if (nextoken.TValue != Values.T_SQ_LPAR)
+                {
+                    Advance();
+                    Node node = new Node(tok);
+                    return node;
+                }
+                Statement LSnode = Expr();
                 Advance();
-                Node node = new Node(tok);
-                return node;
+                return LSnode;
             }
             else if (currtoken.TValue == Values.T_LPAR)
             {
@@ -63,7 +69,7 @@ namespace ToluPL
         }
 
         public Statement Term()
-        {
+        {   
             Statement left = Factor();
             List<string> COND = new List<string>() {Values.T_MULT, Values.T_DIV, Values.T_POW, Values.T_MOD};
             while (COND.Contains(currtoken.TValue))
@@ -83,7 +89,9 @@ namespace ToluPL
             if (currtoken.TType != Values.T_ID) return Values.N_Error;
             Token Varname = currtoken;
             Advance();
-            if (currtoken.TValue == Values.T_SEMICOLON) ASTATEMENT = new AssignStatement(Varname, Values.STEmpty, VARTYPE);
+            Token StTok = new Token(Values.T_INT, -999);
+            Node StNode = new Node(StTok);
+            if (currtoken.TValue == Values.T_SEMICOLON || currtoken.TValue == Values.T_SEMICOLON) ASTATEMENT = new AssignStatement(Varname, StNode, VARTYPE);
             else
             {
                 if (currtoken.TValue != Values.T_EQUAL) return Values.N_Error;
@@ -183,17 +191,18 @@ namespace ToluPL
         {
             Token Name = currtoken;
             Advance();
-            if (currtoken.TValue != Values.T_EQUAL) return Values.STEmpty;
+            if (Convert.ToString(currtoken.TValue) != Values.T_EQUAL) return Values.STEmpty;
             Advance();
             Statement Assigned = Expr();
             ChangeValStatement res = new ChangeValStatement(Name, Assigned);
             return res;
         }
 
-        public Statement CreateBOP()
+        public Statement CreateBOP(Statement left = null)
         {
-            List<string> COND = new List<string>() { Values.T_PLUS, Values.T_MINUS, Values.T_MULT, Values.T_MOD, Values.T_DIV, Values.T_LESS, Values.T_GREATER, Values.T_LS_EQUAL, Values.T_EQUALS, Values.T_GR_EQUAL, Values.T_EQUAL, Values.T_NOT_EQUALS };
-            Statement left = Term();
+            //REMOVED T_EQUAL, IF IT DOESNT WORK CHECK AGAIN (DONE FORE ARR CHANGE VALUE)
+            List<string> COND = new List<string>() { Values.T_PLUS, Values.T_MINUS, Values.T_MULT, Values.T_MOD, Values.T_DIV, Values.T_LESS, Values.T_GREATER, Values.T_LS_EQUAL, Values.T_EQUALS, Values.T_GR_EQUAL, Values.T_NOT_EQUALS };
+            if(left == null) left = Term();
             while (COND.Contains(currtoken.TValue))
             {
 
@@ -226,6 +235,40 @@ namespace ToluPL
             return fncall;
         }
 
+        public Node GenerateArr()
+        {
+            Token tok = new Token(Values.T_LIST, null);
+            Node retNode = new Node(tok);
+            List<Statement> listStat = new List<Statement>();
+            Advance();
+            while (Convert.ToString(currtoken.TValue) != Values.T_SQ_RPAR)
+            {
+                Statement cs = Expr();
+                Advance();
+                listStat.Add(cs);
+            }
+            Advance();
+            retNode.token.TValue = listStat;
+            return retNode;
+        }
+
+        public Statement AccLsItemExpr()
+        {
+            Token VarName = currtoken;
+            Advance();
+            if (currtoken.TValue != Values.T_SQ_LPAR) return Values.STEmpty;
+            Advance();
+            List<Statement> indexes = new List<Statement>();
+            while (Convert.ToString(currtoken.TValue) != Values.T_SQ_RPAR)
+            {
+                Statement currnode = Expr();
+                indexes.Add(currnode);
+                Advance();
+            }
+            AccListStatement als = new AccListStatement(VarName, indexes);
+            return als;
+        }
+
         public Statement HandleDefault()
         {
             if (currtoken.TType == Values.T_ID)
@@ -236,8 +279,27 @@ namespace ToluPL
                         return ChangeExpr();
                     case Values.T_LPAR:
                         return FnCallExpr();
+                    case Values.T_SQ_LPAR:
+                        Statement ListAccess = AccLsItemExpr();
+                        Advance();
+                        ListAccess = CreateBOP(ListAccess);
+                        if (Convert.ToString(currtoken.TValue) != Values.T_EQUAL) return ListAccess;
+                        Advance();
+                        Statement toAssign = Expr();
+                        ChangeValStatementArr cvs = new ChangeValStatementArr((AccListStatement)ListAccess,toAssign);
+                        return cvs;
                     default:
                         return CreateBOP();
+                }
+            }
+            else if (currtoken.TType == Values.T_OP)
+            {
+                switch (currtoken.TValue)
+                {
+                    case Values.T_SQ_LPAR:
+                        return GenerateArr();
+                    default:
+                        break;
                 }
             }
             return CreateBOP();            
