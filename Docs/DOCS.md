@@ -14,7 +14,7 @@ These docs will cover the basics of Tolu's syntax and methods.
 ### Operations
 Tolu's operators allow the user to perform all the basic binary operations.
 Current implemented operators:
-| Left-aligned | Center-aligned |
+| Operator | Operation |
 | :---         |     :---:      |
 |+ - * / **|Add, subtract, multiply, divide, raise to power|
 |%|Modulo operand|
