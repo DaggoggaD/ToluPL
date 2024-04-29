@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
+using System.Xml.Linq;
 
 namespace ToluPL
 {
@@ -19,6 +20,7 @@ namespace ToluPL
 
         public OutI(Statement PRINTABLE, Interpreter interpreter, List<Variable> GlobVar, List<Function> GlobFN)
         {
+
             Printable = PRINTABLE;
 
             CV = new List<Variable>(GlobVar);
@@ -235,12 +237,12 @@ namespace ToluPL
 
             List<Statement> ARRITEMS = val.TValue;
             int curr_index = (int)Expressed_indexes[0].token.TValue;
-            Statement res = ARRITEMS[curr_index];
+            Node res = (Node)ARRITEMS[curr_index];
 
             for (int i = 1; i < Expressed_indexes.Count; i++)
             {
-                curr_index = (int)Expressed_indexes[0].token.TValue;
-                res = val.TValue[curr_index];
+                curr_index = (int)Expressed_indexes[i].token.TValue;
+                res = res.token.TValue[curr_index];
             }
             VALUE = res;
         }
@@ -254,4 +256,47 @@ namespace ToluPL
         }
     }
 
+    internal class ChangeValArrI : IntStatements
+    {
+        public Token AccessName;
+        public Node VALUE;
+
+        public ChangeValArrI(ChangeValStatementArr ACCNAME, Interpreter interpreter, List<Variable> GlobVar, List<Function> GlobFN)
+        {
+            AccessName = ACCNAME.ArrAccName.Name;
+            List<Statement> Indexes = ACCNAME.ArrAccName.Indexes;
+            List<Node> Expressed_indexes = new List<Node>();
+            Indexes.ForEach(x => Expressed_indexes.Add(interpreter.Expr(x, GlobVar, GlobFN)));
+            VALUE = interpreter.Expr(ACCNAME.AssignedVal, GlobVar, GlobFN);
+
+            Variable FoundArr = null;
+            foreach (Variable Var in GlobVar)
+            {
+                if (Var.VNAME == AccessName.TValue)
+                {
+                    FoundArr = Var;
+                    break;
+                }
+            }
+
+            Token val = FoundArr.VALUE.token;
+
+            List<Statement> ARRITEMS = val.TValue;
+            int curr_index = (int)Expressed_indexes[0].token.TValue;
+            Node res = (Node)ARRITEMS[curr_index];
+
+            for (int i = 1; i < Expressed_indexes.Count; i++)
+            {
+                curr_index = (int)Expressed_indexes[i].token.TValue;
+                res = res.token.TValue[curr_index];
+            }
+            res.token = VALUE.token;
+
+        }
+
+        public string REPR()
+        {
+            return "Change Arr Value:" + AccessName.TValue + " -> " + VALUE.REPR();
+        }
+    }
 }

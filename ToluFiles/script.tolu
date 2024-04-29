@@ -39,6 +39,15 @@ fn int ArrTest(){
 	out(a+"\n";);
 	out(b+"\n";);
 	out(c+"\n";);
+	arr[0;]=10;
+	arr[1;]=11;
+	arr[2;]=12;
+	a = arr[0;];
+	b = arr[1;];
+	c = arr[2;];
+	out(a+"\n";);
+	out(b+"\n";);
+	out(c+"\n";);
 }
 
 pi(500;);

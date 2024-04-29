@@ -8,9 +8,10 @@ namespace ToluPL
 {
     internal class Variable
     {
-        public string VTYPE { get; set; }
-        public string VNAME { get; set; }
-        public dynamic VALUE { get; set; }
+        //ADD {get; set;} to the two below if something doesnt work
+        public string VTYPE;
+        public string VNAME;
+        public dynamic VALUE;
         public Statement AssignedVal;
         private List<Variable> CV;
         private List<Function> CF;
@@ -23,7 +24,6 @@ namespace ToluPL
             AssignedVal = OASSIGNEDVAL;
             CV = new List<Variable>(GlobVar);
             CF = new List<Function>(GlobFN);
-
             VALUE = interpreter.Expr(AssignedVal, CV, CF);
             TranslateVar();
         }

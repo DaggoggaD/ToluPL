@@ -9,15 +9,15 @@ namespace ToluPL
 {
     internal class Function
     {
-        public Token Name { get; set; }
-        public Token RetValue { get; set; }
+        public Token Name;
+        public Token RetValue;
         public List<Statement> STArgs;
         public List<Statement> Insidexpr;
 
-        public List<Variable> CV {get; set;}
-        public List<Function> CF { get; set; }
+        public List<Variable> CV;
+        public List<Function> CF;
 
-        public List<Variable> ArgsVal { get; set; }
+        public List<Variable> ArgsVal;
 
         public Function(Token NAME, Token RETVALUE, List<Statement> STARGS, List<Statement> INSIDEXPR, Interpreter interpreter, List<Variable> GlobVar, List<Function> GlobFN) { 
             Name = NAME;
