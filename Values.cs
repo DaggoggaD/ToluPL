@@ -8,6 +8,7 @@ namespace ToluPL
 {
     static class Values
     {
+        //PLACEHOLDERS, TO BE REMOVED IN FINAL VERSION
         public static Token T_Error = new Token("ERROR", "ERROR");
         public static Token Empty = new Token("NONE", "NONE");
         public static Node N_Error = new Node(T_Error);
