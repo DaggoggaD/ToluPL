@@ -149,6 +149,7 @@ namespace ToluPL
     {
         public string VNAME;
         public List<Statement> ARGS;
+        public Statement Result;
         private List<Variable> CV;
         private List<Function> CF;
 
@@ -177,7 +178,12 @@ namespace ToluPL
                 CV[CVLEN + index].VALUE = InV[argsCount + index];
             }
 
-            dynamic result = RunFunc(SelectedFN,interpreter, CV,CF);
+            dynamic CalcRes = RunFunc(SelectedFN,interpreter, CV,CF);
+            if (CalcRes.GetType().Name == nameof(RetStatI))
+            {
+                if(SelectedFN.RetValue.TValue.ToUpper() == CalcRes.Value.token.TType) Result = CalcRes.Value;
+            }
+            else Result = null;
         }
 
         public Function findFunc(List<Function> GlobF)
@@ -199,13 +205,14 @@ namespace ToluPL
             foreach (Statement stat in FN.Insidexpr)
             {
                 RES = interpreter.Expr(stat, GlobVar, GlobFN);
+                if (RES.GetType().Name == nameof(RetStatI)) break;
             }
             return RES;
         }
 
         public string REPR()
         {
-            return "Function run ";
+            return "Function run, result: " + Result.REPR();
         }
     }
 
@@ -297,6 +304,21 @@ namespace ToluPL
         public string REPR()
         {
             return "Change Arr Value:" + AccessName.TValue + " -> " + VALUE.REPR();
+        }
+    }
+
+    internal class RetStatI : IntStatements
+    {
+        public Statement Value;
+
+        public RetStatI(Statement VALUE, Interpreter interpreter, List<Variable> GlobVar, List<Function> GlobFN)
+        {
+            Value = interpreter.Expr(VALUE, GlobVar, GlobFN);
+        }
+
+        public string REPR()
+        {
+            return "Returned value: " + Value.REPR();
         }
     }
 }

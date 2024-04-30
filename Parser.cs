@@ -305,6 +305,14 @@ namespace ToluPL
             return CreateBOP();            
         }
 
+        public Statement AssignRunStatement(string VARTYPE)
+        {
+            Advance();
+            Statement Assigned = Expr();
+            ReturnStatement retst = new ReturnStatement(Assigned);
+            return retst;
+        }
+
         public Statement Expr() {
             switch (currtoken.TValue)
             {
@@ -326,6 +334,8 @@ namespace ToluPL
                     return CheckRunStatements("if");
                 case "while":
                     return CheckRunStatements("while");
+                case "return":
+                    return AssignRunStatement("return");
                 case "fn":
                     return Funcdecl();
                 case "out":

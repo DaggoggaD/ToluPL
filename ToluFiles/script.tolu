@@ -1,6 +1,6 @@
-fn int pi(int len;){
+fn double pi(int len;){
 	int i = 1;
-	long res = 4.0;
+	double res = 4.0;
 	while(i<len){
 		if(i%2==0){
 			res = res + 4/(2*i+1);
@@ -9,47 +9,8 @@ fn int pi(int len;){
 			res = res - 4/(2*i+1);
 		}
 		i = i + 1;
-		out(res;);
-		out("\n";);
 	}
-	
+	return res;
 }
 
-fn long fib(int n;){
-	long num1 = 0;
-	long num2 = 1;
-	long next_num = num2;
-	int count = 1;
-
-	while(count<=n){
-		out(next_num;);
-		out("\n";);
-		count = count + 1;
-		num1 = num2;
-		num2 = next_num;
-		next_num = num1 + num2;
-	}
-}
-
-fn int ArrTest(){
-	list arr = [1,2,3;];
-	int a = arr[0;];
-	int b = arr[1;];
-	int c = arr[2;];
-	out(a+"\n";);
-	out(b+"\n";);
-	out(c+"\n";);
-	arr[0;]=10;
-	arr[1;]=11;
-	arr[2;]=12;
-	a = arr[0;];
-	b = arr[1;];
-	c = arr[2;];
-	out(a+"\n";);
-	out(b+"\n";);
-	out(c+"\n";);
-}
-
-pi(500;);
-fib(35;);
-ArrTest();
+double Fres = pi(999999;);

@@ -4,6 +4,7 @@ using System.Linq;
 using System.Security.Policy;
 using System.Text;
 using System.Threading.Tasks;
+using System.Xml.Linq;
 
 namespace ToluPL
 {
@@ -240,6 +241,20 @@ namespace ToluPL
             Indexes.ForEach(s=> res += ", " + s.REPR());
             res = res.Remove(0,2);
             return $"(Access list: {Name}[{res}])";
+        }
+    }
+
+    class ReturnStatement : Statement
+    {
+        public Statement Value;
+        public ReturnStatement(Statement VALUE)
+        {
+            Value = VALUE;
+        }
+
+        public override string REPR()
+        {
+            return $"(Return: {Value.REPR()})";
         }
     }
 }

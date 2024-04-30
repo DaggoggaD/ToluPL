@@ -11,6 +11,7 @@ namespace ToluPL
     {
         public Token Name;
         public Token RetValue;
+        public Node ReturnNode;
         public List<Statement> STArgs;
         public List<Statement> Insidexpr;
 

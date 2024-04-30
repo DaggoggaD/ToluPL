@@ -10,7 +10,7 @@ namespace ToluPL
     internal class Program
     {
         public static List<Token> toks;
-        public static bool SHUT = false;
+        public static bool SHUT = true;
 
 
         public static List<string> OpenFile(string filepath)
@@ -48,31 +48,33 @@ namespace ToluPL
 
         static void Main(string[] args)
         {
-            var watch = new System.Diagnostics.Stopwatch();
             //Instructions
             Console.WriteLine("Specify script path.");
             Console.WriteLine("Write RUN followed by script path.");
             Console.WriteLine("Write END to exit.");
-            Console.Write("Shell> ");
-
-            //Read file lines
             
-            string Filename = Console.ReadLine();
-            List<string> retVal = OpenFile(Filename);
-            //Lexer init and calc
-            Lexer lexer = new Lexer(retVal);
-            toks = lexer.tokens;
+            while (true)
+            {
+                //Read file lines
+                var watch = new System.Diagnostics.Stopwatch();
+                Console.Write("Shell> ");
+                string Filename = Console.ReadLine();
+                List<string> retVal = OpenFile(Filename);
+                //Lexer init and calc
+                Lexer lexer = new Lexer(retVal);
+                toks = lexer.tokens;
 
-            //Parser
-            Parser parser = new Parser(toks);
-            List<Statement> statements = parser.statements;
+                //Parser
+                Parser parser = new Parser(toks);
+                List<Statement> statements = parser.statements;
 
-            //Interpreter
-            watch.Start();
-            Interpreter interpreter = new Interpreter(statements);
-            watch.Stop();
-            INFO(retVal, statements);
-            Console.WriteLine($"\n[Execution Time: {watch.ElapsedMilliseconds} ms]");
+                //Interpreter
+                watch.Start();
+                Interpreter interpreter = new Interpreter(statements);
+                watch.Stop();
+                INFO(retVal, statements);
+                Console.WriteLine($"\n[Execution Time: {watch.ElapsedMilliseconds} ms]");
+            }
         }
     }
 }

@@ -177,7 +177,7 @@ namespace ToluPL
                 case nameof(FnCallStatement):
                     FnCallStatement fnCallst = (FnCallStatement)statement;
                     FnCallI FnCall = new FnCallI(fnCallst.fnName,fnCallst.arguments,this,GV,GF);
-                    return FnCall;
+                    return FnCall.Result;
 
                 case nameof(AccListStatement):
                     AccListStatement accList = (AccListStatement)statement;
@@ -186,11 +186,15 @@ namespace ToluPL
 
                 case nameof(ChangeValStatementArr):
                     ChangeValStatementArr changeValStatementArr = (ChangeValStatementArr)statement;
-
                     ChangeValArrI res = new ChangeValArrI(changeValStatementArr, this, GV, GF);
-
                     return res;
 
+                case nameof(ReturnStatement):
+                    ReturnStatement returnStatement = (ReturnStatement)statement;
+
+                    RetStatI retStatI = new RetStatI(returnStatement.Value, this, GV, GF);
+
+                    return retStatI;
                 default:
                     return Values.STEmpty;
             }
