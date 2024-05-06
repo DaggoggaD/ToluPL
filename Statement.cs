@@ -34,7 +34,7 @@ namespace ToluPL
 
     class BinaryOP : Statement
     {
-        public Statement left { get; set; }
+        public Statement left;
         public Token opTOKEN;
         public Statement right;
 
@@ -130,18 +130,12 @@ namespace ToluPL
             string args = "";
 
             arguments.ForEach(ie => args += ie.REPR() + ", ");
-            try
-            {
-                args = args.Substring(0, args.Length - 2);
-            }
-            catch (Exception e){ args = "No Args"; }
+            if (args.Length > 0) args = args.Substring(0, args.Length - 2);
+            else args = "No Args";
 
             insidexpr.ForEach(ie => reprstr += ie.REPR() + ", ");
-            try
-            {
-                reprstr = reprstr.Substring(0, reprstr.Length - 2);
-            }
-            catch{ reprstr = "No Expr"; }
+            if(reprstr.Length > 0) reprstr = reprstr.Substring(0, reprstr.Length - 2);
+            else reprstr = "No Expr";
             return "(Function: " + "[" + returnTok.TValue +  "] " + " [" + fnName.TValue + "] " + " [" + args + "]" + " ->" + reprstr;
         }
     }
@@ -161,11 +155,8 @@ namespace ToluPL
         {
             string args = "";
             arguments.ForEach(ie => args += ie.REPR() + ", ");
-            try
-            {
-                args = args.Substring(0, args.Length - 2);
-            }
-            catch (Exception e) { args = "No Args"; }
+            if (args.Length > 0) args = args.Substring(0, args.Length - 2);
+            else args = "No Args";
             
             return $"(Function Call: {fnName}, Args:[{args}])";
         }

@@ -113,7 +113,7 @@ namespace ToluPL
             if (currtoken.TValue != Values.T_CR_LPAR) return Values.N_Error;
             List<Statement> insideStatements = new List<Statement>();
             Advance();
-            while (currtoken.TValue != Values.T_CR_RPAR)
+            while (currtoken.TValue.ToString() != Values.T_CR_RPAR)
             {
                 Statement retstatemnt = Expr();
                 Advance();

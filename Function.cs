@@ -40,25 +40,13 @@ namespace ToluPL
         {
             string args = "";
             STArgs.ForEach(t => {args+= t.REPR() + ", "; });
-            try
-            {
-                args = args.Substring(0, args.Length - 2);
-            }catch (Exception ex)
-            {
-                args = "No Args";
-            }
+            if (args.Length > 0) args = args.Substring(0, args.Length - 2);
+            else args = "No args";
 
             string insexpr = "";
             Insidexpr.ForEach(t => { insexpr += t.REPR() + ", "; });
-            try
-            {
-                insexpr = insexpr.Substring(0, insexpr.Length - 2);
-            }
-            catch (Exception e)
-            {
-                insexpr = "No Expr";
-            }
-            
+            if (Insidexpr.Count>0) insexpr = insexpr.Substring(0, insexpr.Length - 2);
+            else insexpr = "No Expr";
 
             return "Assigned new Function:\n"
                 + "\t[" + RetValue.TValue + "] " + Name.TValue + "\n"

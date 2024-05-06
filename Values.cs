@@ -8,7 +8,7 @@ namespace ToluPL
 {
     static class Values
     {
-        //PLACEHOLDERS, TO BE REMOVED IN FINAL VERSION
+        //Prefabs results
         public static Token T_Error = new Token("ERROR", "ERROR");
         public static Token Empty = new Token("NONE", "NONE");
         public static Node N_Error = new Node(T_Error);
@@ -50,6 +50,7 @@ namespace ToluPL
         public const string T_STRING = "STRING";
         public const string T_LIST = "LIST";
         public const string T_BOOL = "BOOL";
+
         public const string T_KW = "KEYWORD";
         public const string T_ID = "IDENTIFIER";
         public const string T_OP = "OPERATOR";

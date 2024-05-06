@@ -77,8 +77,10 @@ namespace ToluPL
             {
                 foreach (Statement stat in IfStats)
                 {
-                    dynamic InRes = interpreter.Expr(stat, CV, CF);
+                    interpreter.Expr(stat, CV, CF);
                 }
+                CV = new List<Variable>(GlobVar);
+                CF = new List<Function>(GlobFN);
             }
         }
 
@@ -108,9 +110,11 @@ namespace ToluPL
             {
                 foreach (Statement stat in WhileStats)
                 {
-                    dynamic InRes = interpreter.Expr(stat, CV, CF);
+                    interpreter.Expr(stat, CV, CF);
                 }
                 RES = interpreter.Expr(CheckExpr, CV, CF);
+                CV = new List<Variable>(GlobVar);
+                CF = new List<Function>(GlobFN);
             }
         }
 
@@ -162,6 +166,8 @@ namespace ToluPL
             Function SelectedFN = findFunc(GlobFN);
             CV = SelectedFN.CV;
             CF = SelectedFN.CF;
+            List<Variable> StartV = new List<Variable>(CV);
+            List<Function> StartF = new List<Function>(CF);
 
             List<Node> InV = new List<Node>();
             foreach (Statement stat in ARGS)
@@ -178,12 +184,21 @@ namespace ToluPL
                 CV[CVLEN + index].VALUE = InV[argsCount + index];
             }
 
-            dynamic CalcRes = RunFunc(SelectedFN,interpreter, CV,CF);
+            dynamic CalcRes = RunFunc(SelectedFN, interpreter, CV, CF);
             if (CalcRes.GetType().Name == nameof(RetStatI))
             {
-                if(SelectedFN.RetValue.TValue.ToUpper() == CalcRes.Value.token.TType) Result = CalcRes.Value;
+                if (SelectedFN.RetValue.TValue.ToUpper() == CalcRes.Value.token.TType)
+                {
+                    Result = CalcRes.Value;
+                }
+                else
+                {
+                    Result =  ParseUtils.TryParseNode(CalcRes.Value, SelectedFN.RetValue.TValue.ToUpper());
+                }
             }
             else Result = null;
+            SelectedFN.CV = StartV;
+            SelectedFN.CF = StartF;
         }
 
         public Function findFunc(List<Function> GlobF)

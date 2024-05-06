@@ -1,9 +1,5 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.Linq;
-using System.Security.Cryptography;
-using System.Text;
-using System.Threading.Tasks;
 
 namespace ToluPL
 {
@@ -34,52 +30,36 @@ namespace ToluPL
 
         public Token CalcNodesResult(Node LeftNode, Token op, Node RightNode)
         {
-            string STType = LeftNode.token.TType;
-            Token RET;
             switch (op.TValue)
             {
                 //REMEMBER: CURRENTLY IF THE RESULT IS OF A DIFFERENT TYPE, IT DOESNT CHANGE
                 case Values.T_PLUS:
-                    RET = new Token(LeftNode.token.TType, LeftNode.token.TValue + RightNode.token.TValue);
-                    break;
+                    return new Token(LeftNode.token.TType, LeftNode.token.TValue + RightNode.token.TValue);
                 case Values.T_MINUS:
-                    RET = new Token(LeftNode.token.TType, LeftNode.token.TValue - RightNode.token.TValue);
-                    break;
+                    return new Token(LeftNode.token.TType, LeftNode.token.TValue - RightNode.token.TValue);
                 case Values.T_MULT:
-                    RET = new Token(LeftNode.token.TType, LeftNode.token.TValue * RightNode.token.TValue);
-                    break;
+                    return new Token(LeftNode.token.TType, LeftNode.token.TValue * RightNode.token.TValue);
                 case Values.T_DIV:
-                    RET = new Token(LeftNode.token.TType, (float)LeftNode.token.TValue / (float)RightNode.token.TValue);
-                    break;
+                    return new Token(LeftNode.token.TType, (float)LeftNode.token.TValue / (float)RightNode.token.TValue);
                 case Values.T_POW:
-                    RET = new Token(LeftNode.token.TType, (float)Math.Pow((double)LeftNode.token.TValue, (double)RightNode.token.TValue));
-                    break;
+                    return new Token(LeftNode.token.TType, (float)Math.Pow((double)LeftNode.token.TValue, (double)RightNode.token.TValue));
                 case Values.T_MOD:
-                    RET = new Token(LeftNode.token.TType, LeftNode.token.TValue % RightNode.token.TValue);
-                    break;
+                    return new Token(LeftNode.token.TType, LeftNode.token.TValue % RightNode.token.TValue);
                 case Values.T_LESS:
-                    RET = new Token(Values.T_BOOL, (LeftNode.token.TValue < RightNode.token.TValue));
-                    break;
+                    return new Token(Values.T_BOOL, (LeftNode.token.TValue < RightNode.token.TValue));
                 case Values.T_GREATER:
-                    RET = new Token(Values.T_BOOL, (LeftNode.token.TValue > RightNode.token.TValue));
-                    break;
+                    return new Token(Values.T_BOOL, (LeftNode.token.TValue > RightNode.token.TValue));
                 case Values.T_EQUALS:
-                    RET = new Token(Values.T_BOOL, (LeftNode.token.TValue == RightNode.token.TValue));
-                    break;
+                    return new Token(Values.T_BOOL, (LeftNode.token.TValue == RightNode.token.TValue));
                 case Values.T_NOT_EQUALS:
-                    RET = new Token(Values.T_BOOL, (LeftNode.token.TValue != RightNode.token.TValue));
-                    break;
+                    return new Token(Values.T_BOOL, (LeftNode.token.TValue != RightNode.token.TValue));
                 case Values.T_GR_EQUAL:
-                    RET = new Token(Values.T_BOOL, (LeftNode.token.TValue >= RightNode.token.TValue));
-                    break;
+                    return new Token(Values.T_BOOL, (LeftNode.token.TValue >= RightNode.token.TValue));
                 case Values.T_LS_EQUAL:
-                    RET = new Token(Values.T_BOOL, (LeftNode.token.TValue <= RightNode.token.TValue));
-                    break;
+                    return new Token(Values.T_BOOL, (LeftNode.token.TValue <= RightNode.token.TValue));
                 default:
-                    RET = Values.Empty;
-                    break;
+                    return Values.Empty;
             }
-            return RET;
         }
 
         public Token CalcBinOP(BinaryOP statement, List<Variable> GV, List<Function> GF)
@@ -133,14 +113,22 @@ namespace ToluPL
 
         public dynamic Expr(Statement statement, List<Variable> GV, List<Function> GF)
         {
+
             switch (statement.GetType().Name)
             {
                 case nameof(Node):
-                    return NodeAnalisis((Node)statement,GV,GF);
+                    return NodeAnalisis((Node)statement, GV, GF);
 
                 case nameof(AssignStatement):
                     AssignStatement cstatement = (AssignStatement)statement;
-                    Variable variable = new Variable(cstatement.VarType, cstatement.Varname.TValue, cstatement.expr, this, GV,GF);
+                    Variable variable = new Variable(cstatement.VarType, cstatement.Varname.TValue, cstatement.expr, this, GV, GF);
+                    foreach(Variable var in GV)
+                    {
+                        if(var.VNAME == variable.VNAME)
+                        {
+                            throw new Exception($"Variable name already declared!{var.REPR()}");
+                        }
+                    }
                     GV.Add(variable);
                     return variable;
 
@@ -151,32 +139,32 @@ namespace ToluPL
 
                 case nameof(OutStatement):
                     OutStatement ost = (OutStatement)statement;
-                    OutI OutF = new OutI(ost.printable,this,GV,GF);
+                    OutI OutF = new OutI(ost.printable, this, GV, GF);
                     return OutF;
 
                 case nameof(IfStatement):
                     IfStatement ifStatement = (IfStatement)statement;
-                    IfI ifInterp = new IfI(ifStatement.checkexpr,ifStatement.ifexpr, this,GV,GF);
+                    IfI ifInterp = new IfI(ifStatement.checkexpr, ifStatement.ifexpr, this, GV, GF);
                     return ifInterp;
 
                 case nameof(WhileStatement):
                     WhileStatement whileStatement = (WhileStatement)statement;
-                    WhileI whileInterp = new WhileI(whileStatement.checkexpr,whileStatement.insidexpr,this,GV,GF);
+                    WhileI whileInterp = new WhileI(whileStatement.checkexpr, whileStatement.insidexpr, this, GV, GF);
                     return whileInterp;
 
                 case nameof(ChangeValStatement):
                     ChangeValStatement Assign = (ChangeValStatement)statement;
-                    ChangeValI AI = new ChangeValI(Assign.Name,Assign.Value,this,GV,GF);
+                    ChangeValI AI = new ChangeValI(Assign.Name, Assign.Value, this, GV, GF);
                     return AI;
                 case nameof(FnStatement):
                     FnStatement fnStatement = (FnStatement)statement;
-                    Function fn = new Function(fnStatement.fnName,fnStatement.returnTok, fnStatement.arguments,fnStatement.insidexpr, this, GV,GF);
+                    Function fn = new Function(fnStatement.fnName, fnStatement.returnTok, fnStatement.arguments, fnStatement.insidexpr, this, GV, GF);
                     GF.Add(fn);
                     return fn;
 
                 case nameof(FnCallStatement):
                     FnCallStatement fnCallst = (FnCallStatement)statement;
-                    FnCallI FnCall = new FnCallI(fnCallst.fnName,fnCallst.arguments,this,GV,GF);
+                    FnCallI FnCall = new FnCallI(fnCallst.fnName, fnCallst.arguments, this, GV, GF);
                     return FnCall.Result;
 
                 case nameof(AccListStatement):
@@ -202,26 +190,10 @@ namespace ToluPL
 
         public void Cycle()
         {
-            if(!Program.SHUT) Console.Write("----START OF PROGRAM----\n\n");
             while (currstatement!=Values.STEnd)
             {
-                dynamic result = Expr(currstatement,GlobalVariables,GlobalFunctions);
+                Expr(currstatement,GlobalVariables,GlobalFunctions);
                 Advance();
-            }
-            if (!Program.SHUT)
-            {
-                Console.Write("\n----END OF PROGRAM----\n");
-                Console.WriteLine("\n--Global variables debug--\n");
-                foreach (Variable var in GlobalVariables)
-                {
-                    Console.WriteLine(var.REPR());
-                }
-                Console.WriteLine("\n--Global functions debug--\n");
-                foreach (Function fn in GlobalFunctions)
-                {
-                    Console.WriteLine(fn.REPR());
-                }
-                Console.WriteLine();
             }
         }
     }

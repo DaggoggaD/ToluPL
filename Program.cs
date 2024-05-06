@@ -10,7 +10,7 @@ namespace ToluPL
     internal class Program
     {
         public static List<Token> toks;
-        public static bool SHUT = true;
+        public static bool SHUT = false;
 
 
         public static List<string> OpenFile(string filepath)
@@ -34,15 +34,26 @@ namespace ToluPL
             return lines;
         }
 
-        static void INFO(List<string> retVal, List<Statement> statements)
+        static void INFO(List<string> retVal, List<Statement> statements, Interpreter interpreter)
         {
             if (!SHUT)
             {
-                Console.WriteLine("LEXER result\n");
+                Console.WriteLine("\nLEXER result");
                 toks.ForEach(x => x.REPR());
                 Console.WriteLine("\nPARSER result\n");
                 statements.ForEach(statement => { Console.WriteLine(statement.REPR()); });
-                Console.WriteLine("\nCOMPILER result\n");
+                Console.WriteLine("INTERPRETER DEBUG");
+                Console.WriteLine("\n--Global variables debug--\n");
+                foreach (Variable var in interpreter.GlobalVariables)
+                {
+                    Console.WriteLine(var.REPR());
+                }
+                Console.WriteLine("\n--Global functions debug--\n");
+                foreach (Function fn in interpreter.GlobalFunctions)
+                {
+                    Console.WriteLine(fn.REPR());
+                }
+                Console.WriteLine();                
             }
         }
 
@@ -69,10 +80,13 @@ namespace ToluPL
                 List<Statement> statements = parser.statements;
 
                 //Interpreter
+
+                if (!SHUT) Console.Write("----START OF PROGRAM----\n\n");
                 watch.Start();
                 Interpreter interpreter = new Interpreter(statements);
                 watch.Stop();
-                INFO(retVal, statements);
+                Console.Write("\n----END OF PROGRAM----\n");
+                INFO(retVal, statements, interpreter);
                 Console.WriteLine($"\n[Execution Time: {watch.ElapsedMilliseconds} ms]");
             }
         }

@@ -1,16 +1,16 @@
-fn double pi(int len;){
-	int i = 1;
-	double res = 4.0;
-	while(i<len){
-		if(i%2==0){
-			res = res + 4/(2*i+1);
-		}
-		if(i%2!=0){
-			res = res - 4/(2*i+1);
-		}
-		i = i + 1;
-	}
-	return res;
+fn long rand(long seed;){
+	long a = 3870709308;
+	long c = 1;
+	long modulus = 2**20-5;
+	seed = (a * seed + c) % modulus;
+	return seed;
 }
 
-double Fres = pi(999999;);
+int i = 0;
+long Cseed = 99;
+long res = rand(Cseed;);
+while(i<100){
+	res = rand(res;);
+	out(res+"\n";);
+	i=i+1;
+}
