@@ -183,6 +183,12 @@ namespace ToluPL
                     RetStatI retStatI = new RetStatI(returnStatement.Value, this, GV, GF);
 
                     return retStatI;
+
+                case nameof(AppendStatement):
+                    AppendStatement appendStatement = (AppendStatement)statement;
+                    AppStatI appStatI = new AppStatI(appendStatement.Name, appendStatement.Value, this,GV,GF);
+                    
+                    return appStatI;
                 default:
                     return Values.STEmpty;
             }

@@ -248,4 +248,20 @@ namespace ToluPL
             return $"(Return: {Value.REPR()})";
         }
     }
+
+    class AppendStatement : Statement
+    {
+        public Token Name;
+        public Statement Value;
+        public AppendStatement(Token NAME,Statement VALUE)
+        {
+            Name = NAME;
+            Value = VALUE;
+        }
+
+        public override string REPR()
+        {
+            return $"(Append {Value.REPR()} -> {Name.TValue})";
+        }
+    }
 }

@@ -1,16 +1,5 @@
-fn long rand(long seed;){
-	long a = 3870709308;
-	long c = 1;
-	long modulus = 2**20-5;
-	seed = (a * seed + c) % modulus;
-	return seed;
-}
-
-int i = 0;
-long Cseed = 99;
-long res = rand(Cseed;);
-while(i<100){
-	res = rand(res;);
-	out(res+"\n";);
-	i=i+1;
-}
+list arr = [[1,2,3;],2,3;];
+list arrFI = arr[0;];
+append(arrFI, 100);
+arr[0;] = arrFI;
+out(arr[0;];);

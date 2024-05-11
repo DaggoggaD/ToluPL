@@ -313,6 +313,22 @@ namespace ToluPL
             return retst;
         }
 
+        public Statement AppendStatementFunction()
+        {
+            Advance();
+            if (currtoken.TValue != Values.T_LPAR) return Values.STEmpty;
+            Advance();
+            //CHANGE THIS TO STATEMENT, TO ALLOW INSIDE ARRAY TO RECEIVE APPEND
+            Token ArrName = currtoken;
+            Advance();
+            if (currtoken.TValue != Values.T_COMMA) return Values.STEmpty;
+            Advance();
+            Statement Value = Expr();
+            Advance();
+            AppendStatement appendStatement = new AppendStatement(ArrName, Value);
+            return appendStatement;
+        }
+
         public Statement Expr() {
             switch (currtoken.TValue)
             {
@@ -336,6 +352,8 @@ namespace ToluPL
                     return CheckRunStatements("while");
                 case "return":
                     return AssignRunStatement("return");
+                case "append":
+                    return AppendStatementFunction();
                 case "fn":
                     return Funcdecl();
                 case "out":

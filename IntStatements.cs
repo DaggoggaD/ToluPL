@@ -336,4 +336,32 @@ namespace ToluPL
             return "Returned value: " + Value.REPR();
         }
     }
+
+    internal class AppStatI : IntStatements
+    {
+        public Variable Arr;
+        public Statement Value;
+
+        public AppStatI(Token NAME, Statement VALUE, Interpreter interpreter, List<Variable> GlobVar, List<Function> GlobFN)
+        {
+            foreach (Variable Var in GlobVar)
+            {
+                if (Var.VNAME == NAME.TValue)
+                {
+                    Arr = Var;
+                    break;
+                }
+            }
+            Value = interpreter.Expr(VALUE, GlobVar, GlobFN);
+            if (Arr.VTYPE.ToUpper() == Values.T_LIST)
+            {
+                Arr.VALUE.token.TValue.Add(VALUE);
+            }
+        }
+
+        public string REPR()
+        {
+            return "Returned value: " + Value.REPR();
+        }
+    }
 }
